@@ -40,6 +40,17 @@ zoosRouter.get('/', (req, res) => {
             .catch(err => res.status(500).json({error: "An error occurred while updating this zoo."}))
     : res.status(400).json({message: "Please include the updated zoo's name."})
   })
-
+// Delete Existing zoos in the DB
+  zoosRouter.delete('/:id', (req, res) => {
+    db('zoos')
+        .where({id: req.params.id})
+        .del()
+        .then(count => {
+            count
+                ? res.status(200).json({count})
+                :res.status(404).json({message: "That zoo doesn't exist in our Database"})
+        })
+        .catch(err=>res.status(500).json({error: "Could NOT delete this zoo."}))
+  })
 
 module.exports = zoosRouter
